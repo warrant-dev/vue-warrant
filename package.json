@@ -1,5 +1,5 @@
 {
-  "name": "vue-warrant",
+  "name": "@warrantdev/vue-warrant",
   "version": "0.0.1",
   "description": "Vuejs components for Warrant",
   "main": "dist/index.js",

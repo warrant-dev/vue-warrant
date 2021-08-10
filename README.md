@@ -1,4 +1,4 @@
-# @warrantdev/react-warrant-js
+# @warrantdev/vue-warrant
 
 ## Overview
 The Warrant Vuejs library provides a plugin, `vue-router` middleware, and components for controlling access to pages and components in Vuejs using [Warrant](https://warrant.dev/). The library interacts directly with the Warrant API using short-lived session tokens that must be created server-side using your API key. Refer to [this guide](https://docs.warrant.dev/guides/creating-session-tokens) to see how to generate session tokens for your users.
@@ -180,7 +180,7 @@ For more information on how to use the Warrant API, please refer to the
 This package includes TypeScript declarations for Warrant.
 
 Note that we may release new [minor and patch](https://semver.org/) versions of
-`@warrantdev/react-warrant-js` with small but backwards-incompatible fixes to the type
+`@warrantdev/vue-warrant` with small but backwards-incompatible fixes to the type
 declarations. These changes will not affect Warrant itself.
 
 ## Warrant Documentation
