@@ -42,7 +42,7 @@ Set the session token using the `setSessionToken` plugin method:
 ```vue
 // Login.vue
 <template>
-    <form @submit.prevent="onSubmit(email)" class="login-form">
+    <form @submit.prevent="onSubmit(email, password)" class="login-form">
         <!-- email & password inputs, etc. -->
     </form>
 </template>
@@ -53,10 +53,11 @@ export default {
     data() {
         return {
             email: null,
+            password: null,
         };
     },
     methods: {
-        async onSubmit(email) {
+        async onSubmit(email, password) {
             const response = await login(email, password);
 
             // NOTE: This session token must be generated
@@ -69,7 +70,6 @@ export default {
             //
             // Redirect user to logged in page
             //
-            this.$router.push({ path: "/stores" });
         }
     }
 };
