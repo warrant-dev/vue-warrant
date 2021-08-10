@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "esnext",
+        "lib": ["es6", "dom"],
+        "strict": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "declaration": true,
+        "declarationDir": "dist",
+        "noImplicitAny": true,
+    },
+    "include": ["src"],
+    "exclude": ["node_modules"]
+}
