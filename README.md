@@ -1,5 +1,8 @@
 # @warrantdev/vue-warrant
 
+[![npm](https://img.shields.io/npm/v/@warrantdev/vue-warrant)](https://www.npmjs.com/package/@warrantdev/vue-warrant)
+[![Discord](https://img.shields.io/discord/865661082203193365?label=discord)](https://discord.gg/QNCMKWzqET)
+
 ## Overview
 The Warrant Vuejs library provides a plugin, `vue-router` middleware, and components for controlling access to pages and components in Vuejs using [Warrant](https://warrant.dev/). The library interacts directly with the Warrant API using short-lived session tokens that must be created server-side using your API key. Refer to [this guide](https://docs.warrant.dev/guides/creating-session-tokens) to see how to generate session tokens for your users.
 
