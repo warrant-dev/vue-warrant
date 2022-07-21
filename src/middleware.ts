@@ -1,4 +1,4 @@
-import { WARRANT_IGNORE_ID, WarrantCheck } from "@warrantdev/warrant-js";
+import { WarrantCheck } from "@warrantdev/warrant-js";
 
 export interface MiddlewareOptions extends WarrantCheck {
     redirectTo: string;
@@ -10,9 +10,7 @@ export const authorize = (options: MiddlewareOptions) => {
             const { op, warrants, redirectTo } = options;
 
             warrants.forEach((warrant) => {
-                if (warrant.objectId === WARRANT_IGNORE_ID) {
-                    warrant.objectId = WARRANT_IGNORE_ID;
-                } else if (to.params[warrant.objectId]) {
+                if (to.params[warrant.objectId]) {
                     /** @ts-ignore */
                     warrant.objectId = to.params[warrant.objectId];
                 }
