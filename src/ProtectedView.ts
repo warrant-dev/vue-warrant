@@ -3,16 +3,12 @@ import Vue, { CreateElement } from "vue";
 const ProtectedView = Vue.extend({
     name: "ProtectedView",
     props: {
-        objectType: {
+        op: {
             type: String,
-            required: true,
+            required: false,
         },
-        objectId: {
-            type: String,
-            required: true,
-        },
-        relation: {
-            type: String,
+        warrants: {
+            type: Array,
             required: true,
         },
     },
@@ -22,11 +18,11 @@ const ProtectedView = Vue.extend({
         };
     },
     async created() {
-        if (!this.objectId) {
-            throw new Error("Invalid or no objectId provided to ProtectedComponent");
+        if (!this.warrants || this.warrants.length === 0) {
+            throw new Error("Invalid or no warrants provided to ProtectedView");
         }
 
-        this.isAuthorized = await this.$warrant.hasWarrant(this.objectType, this.objectId, this.relation);
+        this.isAuthorized = await this.$warrant.hasWarrant({ op: this.op, warrants: this.warrants });
     },
     render(createElement: CreateElement): any {
         if (this.isAuthorized) {
