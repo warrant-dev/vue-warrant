@@ -9,7 +9,8 @@ export const authorize = (options: MiddlewareOptions) => {
         await next(async (vm: any) => {
             const { op, warrants, redirectTo } = options;
 
-            warrants.forEach((warrant) => {
+            let warrantsToCheck = [...warrants].map(warrant => ({...warrant}));
+            warrantsToCheck.forEach((warrant) => {
                 if (to.params[warrant.objectId]) {
                     /** @ts-ignore */
                     warrant.objectId = to.params[warrant.objectId];
@@ -20,7 +21,7 @@ export const authorize = (options: MiddlewareOptions) => {
                 }
             })  
 
-            const hasWarrant = await vm.$warrant.hasWarrant({ op, warrants });
+            const hasWarrant = await vm.$warrant.hasWarrant({ op, warrants: warrantsToCheck });
             if (!hasWarrant) {
                 next({ path: redirectTo });
             } else {
