@@ -150,26 +150,6 @@ export default {
 </script>
 ```
 
-**NOTE:** To ignore the `objectId` when using any of the provided methods or components, you can pass the constant `WARRANT_IGNORE_ID` for the `objectId` or `objectIdParam`. You must have a corresponding warrant that grants access to **ANY** user on the given `objectType` for this check to succeed.
-```vue
-<template>
-    <div>My Super Secret Component</div>
-</template>
-
-<script>
-import { ProtectedView, authorize, WARRANT_IGNORE_ID } from "@warrantdev/vue-warrant";
-
-export default {
-    beforeRouteEnter: authorize({
-        objectType: "secret",
-        objectIdParam: WARRANT_IGNORE_ID,
-        relation: "viewer",
-        redirectTo: "/",
-    })
-}
-</script>
-```
-
 ## Notes
 We’ve used a random Client Key in these code examples. Be sure to replace it with your
 [actual Client Key](https://app.warrant.dev) to

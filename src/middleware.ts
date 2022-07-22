@@ -1,29 +1,26 @@
-import { WARRANT_IGNORE_ID } from "@warrantdev/warrant-js";
+import { WarrantCheck } from "@warrantdev/warrant-js";
 
-export interface MiddlewareOptions {
-    objectType: string;
-    objectIdParam: string;
-    relation: string;
+export interface MiddlewareOptions extends WarrantCheck {
     redirectTo: string;
 }
 
 export const authorize = (options: MiddlewareOptions) => {
     return async (to: any, from: any, next: any) => {
         await next(async (vm: any) => {
-            const { objectType, objectIdParam, relation, redirectTo } = options;
+            const { op, warrants, redirectTo } = options;
 
-            let objectId = "";
-            if (objectIdParam === WARRANT_IGNORE_ID) {
-                objectId = WARRANT_IGNORE_ID;
-            } else {
-                objectId = to.params[objectIdParam];
-            }
+            warrants.forEach((warrant) => {
+                if (to.params[warrant.objectId]) {
+                    /** @ts-ignore */
+                    warrant.objectId = to.params[warrant.objectId];
+                }
 
-            if (!objectId) {
-                throw new Error("Invalid or no objectIdParam provided for ProtectedRoute");
-            }
+                if (!warrant.objectId) {
+                    throw new Error("Invalid or no objectId provided for ProtectedRoute");
+                }
+            })  
 
-            const hasWarrant = await vm.$warrant.hasWarrant(objectType, objectId, relation);
+            const hasWarrant = await vm.$warrant.hasWarrant({ op, warrants });
             if (!hasWarrant) {
                 next({ path: redirectTo });
             } else {

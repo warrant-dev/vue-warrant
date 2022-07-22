@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { Client as WarrantClient } from "@warrantdev/warrant-js";
+import { Client as WarrantClient, WarrantCheck } from "@warrantdev/warrant-js";
 
 export interface PluginOptions {
     clientKey: string;
@@ -32,13 +32,13 @@ const useWarrant = (options: PluginOptions): Vue => {
 
                 localStorage.setItem(LOCAL_STORAGE_KEY_SESSION_TOKEN, newSessionToken);
             },
-            async hasWarrant(objectType: string, objectId: string, relation: string): Promise<boolean> {
+            async hasWarrant(warrantCheck: WarrantCheck): Promise<boolean> {
                 if (!this.sessionToken) {
                     throw new Error("No session token provided to Warrant. You may have forgotten to call setSessionToken with a valid session token to finish initializing Warrant.");
                 }
 
                 this.isLoading = true;
-                const isAuthorized = await new WarrantClient(options.clientKey, this.sessionToken).isAuthorized(objectType, objectId, relation);
+                const isAuthorized = await new WarrantClient(options.clientKey, this.sessionToken).isAuthorized(warrantCheck);
                 this.isLoading = false;
 
                 return isAuthorized;
