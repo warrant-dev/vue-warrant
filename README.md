@@ -79,8 +79,8 @@ export default {
 </script>
 ```
 
-### `hasWarrant(objectType, objectId, relation)`
-`hasWarrant` is a plugin method that returns a `Promise` which resolves with `true` if the user for the current session token has the warrant with the specified `objectType`, `objectId`, and `relation` and returns `false` otherwise. Use it for fine-grained conditional rendering or for specific logic within components.
+### `hasWarrant(warrantCheck)`
+`hasWarrant` is a plugin method that returns a `Promise` which resolves with `true` if the user for the current session token has the specified `warrants` and returns `false` otherwise. Use it for fine-grained conditional rendering or for specific logic within components.
 
 Using `hasWarrant` plugin method:
 ```vue
@@ -95,7 +95,14 @@ export default {
         protectedInfo: null,
     },
     async created() {
-        if (await this.$warrant.hasWarrant("info", "protected_info", "viewer")) {
+        const isAuthorized = await this.$warrant.hasWarrant({
+            warrants: [{
+                objectType: "info",
+                objectId: "protected_info",
+                relation: "viewer",
+            }]
+        });
+        if (isAuthorized) {
             // request protected info from server
         }
     }
@@ -115,9 +122,11 @@ import { ProtectedView, authorize } from "@warrantdev/vue-warrant";
 
 export default {
     beforeRouteEnter: authorize({
-        objectType: "secret",
-        objectIdParam: "secretId",
-        relation: "viewer",
+        warrants: [{
+            objectType: "secret",
+            objectId: "secretId",
+            relation: "viewer",
+        }],
         redirectTo: "/",
     })
 }
@@ -131,9 +140,7 @@ export default {
     <div>
         <my-public-component/>
         <protected-view
-            :objectType="'myObject'"
-            :objectId="object.id"
-            :relation="'view'"
+            :warrants="warrants"
         >
             <my-protected-component/>
         </protected-view>
@@ -145,9 +152,42 @@ import { ProtectedView } from "@warrantdev/vue-warrant";
 export default {
     components: {
         ProtectedView,
-    }
+    },
+    data: function() {
+        return {
+            warrants: [{
+                objectType: "myObject",
+                objectId: this.$route.params.objectId,
+                relation: "view",
+            }]
+        };
+    },
 };
 </script>
+```
+
+## Support for Multiple Warrants
+
+`warrants` contains the list of warrants evaluted to determine if the user has access. If `warrants` contains multiple warrants, the `op` parameter is required and specifies how the list of warrants should be evaluated.
+
+**anyOf** specifies that the access check request will be authorized if *any of* the warrants are matched and will not be authorized otherwise.
+
+**allOf** specifies that the access check request will be authorized if *all of* the warrants are matched and will not be authorized otherwise.
+
+```javascript
+// User is authorized if they are a 'viewer' of protected_info OR a 'viewer' of 'another_protected_info'
+const isAuthorized = await this.$warrant.hasWarrant({
+    op: "anyOf",
+    warrants: [{
+        objectType: "info",
+        objectId: "protected_info",
+        relation: "viewer",
+    }, {
+        objectType: "info",
+        objectId: "another_protected_info",
+        relation: "viewer",
+    }]
+});
 ```
 
 ## Notes
