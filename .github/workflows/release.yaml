@@ -20,3 +20,4 @@ jobs:
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+          NODE_OPTIONS: --openssl-legacy-provider
