@@ -1,6 +1,6 @@
-import { WarrantCheck } from "@warrantdev/warrant-js";
+import { CheckMany, WarrantObjectLiteral, isWarrantObject } from "@warrantdev/warrant-js";
 
-export interface MiddlewareOptions extends WarrantCheck {
+export interface MiddlewareOptions extends CheckMany {
     redirectTo: string;
 }
 
@@ -11,15 +11,28 @@ export const authorize = (options: MiddlewareOptions) => {
 
             let warrantsToCheck = [...warrants].map(warrant => ({...warrant}));
             warrantsToCheck.forEach((warrant) => {
-                if (to.params[warrant.objectId]) {
-                    /** @ts-ignore */
-                    warrant.objectId = to.params[warrant.objectId];
-                }
+                if (isWarrantObject(warrant.object)) {
+                    if (to.params[warrant.object?.getObjectId()]) {
+                        warrant.object = {
+                            objectType: warrant.object.getObjectType(),
+                            objectId: to.params[warrant.object.getObjectId()]
+                        }
+                    }
 
-                if (!warrant.objectId) {
-                    throw new Error("Invalid or no objectId provided for ProtectedRoute");
+                    /** @ts-ignore */
+                    if (!warrant.object?.getObjectId()) {
+                        throw new Error("Invalid or no objectId provided for ProtectedRoute");
+                    }
+                } else {
+                    if (to.params[warrant.object?.objectId]) {
+                        warrant.object.objectId = to.params[warrant.object.objectId];
+                    }
+
+                    if (!warrant.object?.objectId) {
+                        throw new Error("Invalid or no objectId provided for ProtectedRoute");
+                    }
                 }
-            })  
+            })
 
             const hasWarrant = await vm.$warrant.hasWarrant({ op, warrants: warrantsToCheck });
             if (!hasWarrant) {
