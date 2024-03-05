@@ -34,8 +34,8 @@ export const authorize = (options: MiddlewareOptions) => {
                 }
             })
 
-            const hasWarrant = await vm.$warrant.hasWarrant({ op, warrants: warrantsToCheck });
-            if (!hasWarrant) {
+            const isAuthorized = await vm.$warrant.checkMany({ op, warrants: warrantsToCheck });
+            if (!isAuthorized) {
                 next({ path: redirectTo });
             } else {
                 next();
