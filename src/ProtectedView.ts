@@ -22,7 +22,7 @@ const ProtectedView = Vue.extend({
             throw new Error("Invalid or no warrants provided to ProtectedView");
         }
 
-        this.isAuthorized = await this.$warrant.hasWarrant({ op: this.op, warrants: this.warrants });
+        this.isAuthorized = await this.$warrant.checkMany({ op: this.op, warrants: this.warrants });
     },
     render(createElement: CreateElement): any {
         if (this.isAuthorized) {

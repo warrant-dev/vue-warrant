@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { Client as WarrantClient, WarrantCheck } from "@warrantdev/warrant-js";
+import { WarrantClient, Check, CheckMany, FeatureCheck, PermissionCheck } from "@warrantdev/warrant-js";
 
 export interface PluginOptions {
     clientKey: string;
@@ -32,13 +32,46 @@ const useWarrant = (options: PluginOptions): Vue => {
 
                 localStorage.setItem(LOCAL_STORAGE_KEY_SESSION_TOKEN, newSessionToken);
             },
-            async hasWarrant(warrantCheck: WarrantCheck): Promise<boolean> {
+            async check(warrantCheck: Check): Promise<boolean> {
                 if (!this.sessionToken) {
                     throw new Error("No session token provided to Warrant. You may have forgotten to call setSessionToken with a valid session token to finish initializing Warrant.");
                 }
 
                 this.isLoading = true;
-                const isAuthorized = await new WarrantClient(options.clientKey, this.sessionToken).isAuthorized(warrantCheck);
+                const isAuthorized = await new WarrantClient({ clientKey: options.clientKey, sessionToken: this.sessionToken }).check(warrantCheck);
+                this.isLoading = false;
+
+                return isAuthorized;
+            },
+            async checkMany(warrantCheck: CheckMany): Promise<boolean> {
+                if (!this.sessionToken) {
+                    throw new Error("No session token provided to Warrant. You may have forgotten to call setSessionToken with a valid session token to finish initializing Warrant.");
+                }
+
+                this.isLoading = true;
+                const isAuthorized = await new WarrantClient({ clientKey: options.clientKey, sessionToken: this.sessionToken }).checkMany(warrantCheck);
+                this.isLoading = false;
+
+                return isAuthorized;
+            },
+            async hasPermission(warrantCheck: PermissionCheck): Promise<boolean> {
+                if (!this.sessionToken) {
+                    throw new Error("No session token provided to Warrant. You may have forgotten to call setSessionToken with a valid session token to finish initializing Warrant.");
+                }
+
+                this.isLoading = true;
+                const isAuthorized = await new WarrantClient({ clientKey: options.clientKey, sessionToken: this.sessionToken }).hasPermission(warrantCheck);
+                this.isLoading = false;
+
+                return isAuthorized;
+            },
+            async hasFeature(warrantCheck: FeatureCheck): Promise<boolean> {
+                if (!this.sessionToken) {
+                    throw new Error("No session token provided to Warrant. You may have forgotten to call setSessionToken with a valid session token to finish initializing Warrant.");
+                }
+
+                this.isLoading = true;
+                const isAuthorized = await new WarrantClient({ clientKey: options.clientKey, sessionToken: this.sessionToken }).hasFeature(warrantCheck);
                 this.isLoading = false;
 
                 return isAuthorized;

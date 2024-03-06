@@ -33,9 +33,9 @@
   },
   "homepage": "https://github.com/warrant-dev/vue-warrant#readme",
   "dependencies": {
-    "@warrantdev/warrant-js": "^1.0.0"
   },
   "peerDependencies": {
+    "@warrantdev/warrant-js": "^3.4.0",
     "vue": "^2.6.14"
   },
   "devDependencies": {
